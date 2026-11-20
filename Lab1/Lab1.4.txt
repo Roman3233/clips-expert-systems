@@ -1,0 +1,12 @@
+(deftemplate person
+	(multislot name)
+	(slot age (type INTEGER))		
+	(slot gender (allowed-values male female))
+	
+)
+
+(deffacts people
+	(person (name "Ivan Ivanenko")(age 22)(gender male))
+	(person (name "Natalia Ivanenko")(age 25)(gender female))
+	(person (name "Artem Ivanenko")(age 30)(gender male))
+)

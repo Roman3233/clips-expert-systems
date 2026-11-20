@@ -1,0 +1,4 @@
+(defrule find-woman
+   (person (name ?n)(age ?a)(gender female))
+   =>
+   (printout t "Found woman: " ?n " age: " ?a crlf))
