@@ -1,0 +1,32 @@
+(deftemplate sensor
+	(slot id (type INTEGER) (range 1 10))
+	(slot status (allowed-values ok faulty))
+)
+
+;; Допоміжний факт-прапорець: чи вже було показано попередження
+(deftemplate warning-given)
+
+;; Початковий стан: усі 10 датчиків справні
+(deffacts initial-sensors
+	(sensor (id 1)  (status ok))
+	(sensor (id 2)  (status ok))
+	(sensor (id 3)  (status ok))
+	(sensor (id 4)  (status ok))
+	(sensor (id 5)  (status ok))
+	(sensor (id 6)  (status ok))
+	(sensor (id 7)  (status ok))
+	(sensor (id 8)  (status ok))
+	(sensor (id 9)  (status ok))
+	(sensor (id 10) (status ok))
+)
+
+;; Правило: попередження, якщо несправні 3+ датчики
+(defrule warning-three-or-more-faulty
+	(not (warning-given))
+	(sensor (id ?i1) (status faulty))
+	(sensor (id ?i2&:(> ?i2 ?i1)) (status faulty))
+	(sensor (id ?i3&:(> ?i3 ?i2)) (status faulty))
+	=>
+	(assert (warning-given))
+	(printout t ">>> ПОПЕРЕДЖЕННЯ: виявлено 3 або більше несправних датчиків! <<<" crlf)
+)
