@@ -1,0 +1,54 @@
+(defrule rule-1-father
+	(declare (salience 90))
+	(parent-of (parent-type father) (parent ?p) (child ?c))
+	=>
+	(printout t "The father of " ?c " is " ?p "." crlf))
+ 
+(defrule rule-2-mother
+	(declare (salience 80))
+	(parent-of (parent-type mother) (parent ?p) (child ?c))
+	=>
+	(printout t "The mother of " ?c " is " ?p "." crlf))
+ 
+(defrule rule-3-parents
+	(declare (salience 70))
+	(parents-of (child ?c) (parents ?p1 ?p2))
+	=>
+	(printout t "The parents of " ?c " are " ?p1 " and " ?p2 "." crlf))
+ 
+(defrule rule-4-tom-father
+	(declare (salience 60))
+	(has-role (person Tom) (role father))
+	=>
+	(printout t "Tom is a father." crlf))
+ 
+(defrule rule-5-susan-mother
+	(declare (salience 50))
+	(has-role (person Susan) (role mother))
+	=>
+	(printout t "Susan is a mother." crlf))
+ 
+(defrule rule-6-john-son
+	(declare (salience 40))
+	(has-role (person John) (role son))
+	=>
+	(printout t "John is a son." crlf))
+ 
+(defrule rule-7-tom-male
+	(declare (salience 30))
+	(has-gender (person Tom) (gender male))
+	=>
+	(printout t "Tom is a male." crlf))
+ 
+(defrule rule-8-susan-female
+	(declare (salience 20))
+	(has-gender (person Susan) (gender female))
+	=>
+	(printout t "Susan is a female." crlf))
+ 
+(defrule rule-9-john-male
+	(declare (salience 10))
+	(has-gender (person John) (gender male))
+	=>
+	(printout t "John is a male." crlf))
+ 

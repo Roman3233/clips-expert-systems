@@ -1,0 +1,84 @@
+;; Опис зірки
+(deftemplate star
+	(slot name)
+	(slot class (allowed-values A B F G K M O))
+	(slot magnitude (type INTEGER))
+	(slot distance (type FLOAT))
+)
+
+;; Вхідні дані - заданий клас і величина
+(deftemplate query-class
+	(slot class (allowed-values A B F G K M O))
+)
+
+(deftemplate query-magnitude
+	(slot magnitude (type INTEGER))
+)
+
+;; Факти
+(deffacts stars-data
+	(star (name Sirius)      (class A) (magnitude 1)  (distance 8.8))
+	(star (name Canopus)     (class F) (magnitude -3) (distance 98.0))
+	(star (name Arcturus)    (class K) (magnitude 0)  (distance 36.0))
+	(star (name Vega)        (class A) (magnitude 1)  (distance 26.0))
+	(star (name Capella)     (class G) (magnitude -1) (distance 46.0))
+	(star (name Rigel)       (class B) (magnitude -7) (distance 880.0))
+	(star (name Procyon)     (class F) (magnitude 3)  (distance 11.0))
+	(star (name Betelgeuse)  (class M) (magnitude -5) (distance 490.0))
+	(star (name Altair)      (class A) (magnitude 2)  (distance 16.0))
+	(star (name Aldebaran)   (class K) (magnitude -1) (distance 68.0))
+	(star (name Spica)       (class B) (magnitude -3) (distance 300.0))
+	(star (name Antares)     (class M) (magnitude -4) (distance 250.0))
+	(star (name Pollux)      (class K) (magnitude 1)  (distance 35.0))
+	(star (name Deneb)       (class A) (magnitude -7) (distance 1630.0))
+)
+
+;; Вхідні факти - два факти, що задають клас і величину для пошуку
+(deffacts input-query
+	(query-class (class A))
+	(query-magnitude (magnitude 1))
+)
+
+;; --- Блок 1: усі зірки заданого спектрального класу ---
+(defrule header-class
+	(declare (salience 35))
+	(query-class (class ?cl))
+	=>
+	(printout t "=== Зорі спектрального класу " ?cl " ===" crlf))
+
+(defrule show-by-class
+	(declare (salience 30))
+	(query-class (class ?cl))
+	(star (name ?n) (class ?cl))
+	=>
+	(printout t ?n " - клас " ?cl crlf))
+
+;; --- Блок 2: усі зірки заданої величини ---
+(defrule header-magnitude
+	(declare (salience 25))
+	(query-magnitude (magnitude ?m))
+	=>
+	(printout t "=== Зорі величини " ?m " ===" crlf))
+
+(defrule show-by-magnitude
+	(declare (salience 20))
+	(query-magnitude (magnitude ?m))
+	(star (name ?n) (magnitude ?m))
+	=>
+	(printout t ?n " - величина " ?m crlf))
+
+;; --- Блок 3: зірки, що відповідають обом умовам + відстань ---
+(defrule header-both
+	(declare (salience 15))
+	(query-class (class ?cl))
+	(query-magnitude (magnitude ?m))
+	=>
+	(printout t "=== Зорі класу " ?cl " та величини " ?m " (з відстанню) ===" crlf))
+
+(defrule show-by-both
+	(declare (salience 10))
+	(query-class (class ?cl))
+	(query-magnitude (magnitude ?m))
+	(star (name ?n) (class ?cl) (magnitude ?m) (distance ?d))
+	=>
+	(printout t ?n " - клас " ?cl ", величина " ?m ", відстань " ?d " св. років" crlf))
