@@ -1,0 +1,15 @@
+;; Опис користувача системи
+(deftemplate user
+	(slot username)
+	(slot role (allowed-values administrator manager employee))
+	(slot department)
+	(slot status (allowed-values active inactive))
+)
+
+;; Факти 
+(deffacts users-facts
+
+	(user (username Petrenko) (role administrator) (department IT) (status active))
+	(user (username Kovalchuk) (role manager) (department Marketing) (status inactive))
+	(user (username Ivanenko) (role employee) (department HR) (status active))
+)

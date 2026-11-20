@@ -1,0 +1,41 @@
+;; Один з батьків пов'язаний з дитиною
+(deftemplate parent-of
+	(slot parent-type (allowed-values father mother))
+	(slot parent)
+	(slot child)
+)
+
+;; Обидва батьки дитини разом
+(deftemplate parents-of
+	(slot child)
+	(multislot parents)
+)
+
+;; Роль людини
+(deftemplate has-role
+	(slot person)
+	(slot role (allowed-values father mother son daughter))
+)
+
+;; Стать людини
+(deftemplate has-gender
+	(slot person)
+	(slot gender (allowed-values male female))
+)
+
+;; Факти
+(deffacts family-facts
+
+	(parent-of (parent-type father) (parent Tom) (child John))
+	(parent-of (parent-type mother) (parent Susan) (child John))
+
+	(parents-of (child John) (parents Tom Susan))
+
+	(has-role (person Tom) (role father))
+	(has-role (person Susan) (role mother))
+	(has-role (person John) (role son))
+
+	(has-gender (person Tom) (gender male))
+	(has-gender (person Susan) (gender female))
+	(has-gender (person John) (gender male))
+)
