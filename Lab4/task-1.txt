@@ -1,0 +1,99 @@
+;; deftemplate: опис зорі (база знань)
+(deftemplate star
+	(slot name)
+	(slot class (allowed-values O B A F G K M))
+	(slot magnitude (type INTEGER) (range -7 15))
+	(slot distance (type FLOAT))
+)
+
+;; Факти: таблиця відомих зірок (база знань системи)
+(deffacts stars-data
+	(star (name Sirius)      (class A) (magnitude 1)  (distance 8.8))
+	(star (name Canopus)     (class F) (magnitude -3) (distance 98.0))
+	(star (name Arcturus)    (class K) (magnitude 0)  (distance 36.0))
+	(star (name Vega)        (class A) (magnitude 1)  (distance 26.0))
+	(star (name Capella)     (class G) (magnitude -1) (distance 46.0))
+	(star (name Rigel)       (class B) (magnitude -7) (distance 880.0))
+	(star (name Procyon)     (class F) (magnitude 3)  (distance 11.0))
+	(star (name Betelgeuse)  (class M) (magnitude -5) (distance 490.0))
+	(star (name Altair)      (class A) (magnitude 2)  (distance 16.0))
+	(star (name Aldebaran)   (class K) (magnitude -1) (distance 68.0))
+	(star (name Spica)       (class B) (magnitude -3) (distance 300.0))
+	(star (name Antares)     (class M) (magnitude -4) (distance 250.0))
+	(star (name Pollux)      (class K) (magnitude 1)  (distance 35.0))
+	(star (name Deneb)       (class A) (magnitude -7) (distance 1630.0))
+)
+
+
+;; Функції введення даних
+
+;; --- Запит спектрального класу у користувача ---
+(deffunction ask-class ()
+	(bind ?valid FALSE)
+	(while (not ?valid) do
+		(printout t "Введіть спектральний клас зорі (O, B, A, F, G, K, M): ")
+		(bind ?cl (read))
+		(if (member$ ?cl (create$ O B A F G K M))
+			then
+			(bind ?valid TRUE)
+			else
+			(printout t ">>> Помилка: клас має бути одним з O, B, A, F, G, K, M. Спробуйте ще раз." crlf)
+		)
+	)
+	?cl
+)
+
+;; --- Запит величини у користувача ---
+(deffunction ask-magnitude ()
+	(bind ?valid FALSE)
+	(while (not ?valid) do
+		(printout t "Введіть величину зорі (ціле число від -7 до 15): ")
+		(bind ?m (read))
+		(if (and (integerp ?m) (>= ?m -7) (<= ?m 15))
+			then
+			(bind ?valid TRUE)
+			else
+			(printout t ">>> Помилка: величина має бути цілим числом від -7 до 15. Спробуйте ще раз." crlf)
+		)
+	)
+	?m
+)
+
+;; Функції виведення результату 
+
+;; --- Блок 1: усі зорі заданого спектрального класу ---
+(deffunction print-by-class (?cl)
+	(printout t "=== Зорі спектрального класу " ?cl " ===" crlf)
+	(do-for-all-facts ((?s star)) (eq ?s:class ?cl)
+		(printout t ?s:name " - клас " ?s:class crlf)
+	)
+)
+
+;; --- Блок 2: усі зорі заданої величини ---
+(deffunction print-by-magnitude (?m)
+	(printout t "=== Зорі величини " ?m " ===" crlf)
+	(do-for-all-facts ((?s star)) (eq ?s:magnitude ?m)
+		(printout t ?s:name " - величина " ?s:magnitude crlf)
+	)
+)
+
+;; --- Блок 3: зорі, що відповідають обом умовам, з відстанню ---
+(deffunction print-by-both (?cl ?m)
+	(printout t "=== Зорі класу " ?cl " та величини " ?m " (з відстанню) ===" crlf)
+	(do-for-all-facts ((?s star)) (and (eq ?s:class ?cl) (eq ?s:magnitude ?m))
+		(printout t ?s:name " - клас " ?s:class ", величина " ?s:magnitude
+			", відстань " ?s:distance " св. років" crlf)
+	)
+)
+
+;; Головна функція - точка запуску експертної системи
+(deffunction run-stars-es ()
+	(printout t crlf "----- Експертна система: класифікація зірок -----" crlf)
+	(bind ?cl (ask-class))
+	(bind ?m (ask-magnitude))
+	(printout t crlf)
+	(print-by-class ?cl)
+	(print-by-magnitude ?m)
+	(print-by-both ?cl ?m)
+	(printout t "----- Роботу завершено -----" crlf)
+)
